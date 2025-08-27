@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Sign Recognition</title>
+    
+    <!-- 1. Import a professional font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- 2. Add all the new styling -->
+    <style>
+        /* Define a modern color palette */
+        :root {
+            --primary-color: #007bff;
+            --primary-hover-color: #0056b3;
+            --background-color: #f0f2f5;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --heading-color: #000;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --border-color: #dee2e6;
+        }
+
+        /* Apply the new theme and font to the entire page */
+        body { 
+            font-family: 'Poppins', sans-serif;
+            text-align: center; 
+            margin: 0;
+            padding: 40px 20px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Main content container with a "card" look */
+        .container {
+            max-width: 550px;
+            width: 100%;
+            padding: 40px;
+            background-color: var(--card-background);
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        h1 { 
+            color: var(--heading-color); 
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 1.1em;
+            color: #6c757d;
+            margin-bottom: 30px;
+        }
+
+        .upload-form form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        /* Hide the default, ugly file input */
+        input[type="file"] {
+            display: none;
+        }
+
+        /* 3. Style the "Choose File" button beautifully */
+        .custom-file-upload {
+            border: 2px solid var(--border-color);
+            display: inline-block;
+            padding: 12px 25px;
+            cursor: pointer;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .custom-file-upload:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        #file-name {
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        /* 4. Style the "Predict" button beautifully */
+        input[type="submit"] {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: var(--primary-hover-color);
+        }
+        
+        input[type="submit"]:active {
+            transform: scale(0.98);
+        }
+
+        /* Style for the prediction result text */
+        .result { 
+            margin-top: 40px; 
+            font-size: 1.6em; 
+            font-weight: 600; 
+            color: var(--success-color);
+        }
+
+        /* Style for displaying errors (e.g., model not loaded) */
+        .error {
+            color: var(--error-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Traffic Sign Recognition</h1>
+        <p>Upload an image of a traffic sign to see its meaning.</p>
+        
+        <div class="upload-form">
+            <form action="/predict" method="post" enctype="multipart/form-data">
+                <!-- The real file input is hidden -->
+                <input type="file" name="file" id="file-upload" accept="image/png, image/jpeg, image/jpg" required>
+                
+                <!-- This is the styled label that acts as our new button -->
+                <label for="file-upload" class="custom-file-upload">Choose File</label>
+                
+                <!-- This will show the name of the selected file -->
+                <span id="file-name">No file chosen</span>
+
+                <input type="submit" value="Predict Sign">
+            </form>
+        </div>
+
+        <!-- This section will display the prediction result or any errors -->
+        <div class="result">
+            {% if prediction_text %}
+                <h2 class="{{ 'error' if 'Error' in prediction_text or 'not loaded' in prediction_text or 'Could not' in prediction_text else '' }}">
+                    {{ prediction_text }}
+                </h2>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- A little bit of JavaScript to show the selected file name -->
+    <script>
+        const fileInput = document.getElementById('file-upload');
+        const fileNameSpan = document.getElementById('file-name');
+
+        fileInput.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                fileNameSpan.textContent = this.files[0].name;
+            } else {
+                fileNameSpan.textContent = 'No file chosen';
+            }
+        });
+    </script>
+
+</body>
+</html>
